@@ -3,6 +3,10 @@ package com.athome.springTest.service;
 import com.athome.springTest.model.Users;
 import com.athome.springTest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,9 @@ public class UserService {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public Users addUser(Users users) {
@@ -22,11 +29,15 @@ public class UserService {
     }
 
     public String verifyUser(Users user) {
-        Users foundUser = userRepository.findByUsername(user.getUsername());
-        if (foundUser != null && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
-            return jwtService.generateToken(foundUser);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
+
+        if(authentication.isAuthenticated()){
+            return jwtService.generateToken(user);
         }
-        return null;
+        return "fail";
     }
 
 }

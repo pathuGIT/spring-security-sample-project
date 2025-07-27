@@ -23,7 +23,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> userLogin(@RequestBody Users user){
-        System.out.println("tet");
         try {
             String res = userService.verifyUser(user);
             if (res != null) {

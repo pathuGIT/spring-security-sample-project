@@ -49,17 +49,10 @@ public class UserController {
     public ResponseEntity<?> getRefreshToken(@RequestBody Map<String, String> request){
         try {
             String refresh_token = request.get("refreshToken");
-            String username = jwtService.extractUserName(refresh_token);
-            String role = jwtService.extractRole(refresh_token);
+            Map<String, String> res =  userService.getRefreshToken(refresh_token);
+            System.out.println("xxxxxx");
+            return ResponseEntity.ok(res);
 
-            UserDetails userDetails = User.withUsername(username).password("").roles(role).build();
-
-            if(jwtService.validateToken(refresh_token, userDetails)){
-                String newAccessToken = jwtService.generateToken(userRepository.findByUsername(username));
-                return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
-            }
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }

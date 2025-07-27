@@ -21,20 +21,30 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
     }
 
-    public String generateToken(Users users){
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("ROLE", users.getRole());
-
+    public String generateToken(Users user) {
+        System.out.println(user.getRole()+user.getUsername());
         return Jwts.builder()
-                .claims()
-                .add(claims)
-                .subject(users.getUsername())
+                .claim("ROLE", user.getRole())  // Add role claim
+                .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000*60*5))
-                .and()
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 5)) // 5 minutes
                 .signWith(secretKey)
                 .compact();
     }
+
+
+    // Refresh token (7 days)
+    public String generateRefreshToken(Users user) {
+        return Jwts.builder()
+                .claim("ROLE", user.getRole())  // Add role claim
+                .subject(user.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7)) // 7 days
+                .signWith(secretKey)
+                .compact();
+    }
+
+
 
     public String extractUserName(String token) {
         return Jwts.parser()
@@ -45,8 +55,29 @@ public class JwtService {
                 .getSubject();
     }
 
+    public Date extractExpiration(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+    }
+
+    public String extractRole(String token) {
+        return (String) Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("ROLE");
+    }
+
+
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUserName(token);
-        return (username.equals(userDetails.getUsername()));
+        Date expiration = extractExpiration(token);
+        return username.equals(userDetails.getUsername()) && !expiration.before(new Date());
     }
+
 }

@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login").permitAll()  // allow register & login
+                        .requestMatchers("/register", "/login", "/refresh-token").permitAll()  // allow register & login
                         .anyRequest().authenticated() // others require login
                 )
                 //.httpBasic(); // keep basic auth

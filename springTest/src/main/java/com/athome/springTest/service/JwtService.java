@@ -3,11 +3,10 @@ package com.athome.springTest.service;
 import com.athome.springTest.model.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,4 +36,17 @@ public class JwtService {
                 .compact();
     }
 
+    public String extractUserName(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUserName(token);
+        return (username.equals(userDetails.getUsername()));
+    }
 }

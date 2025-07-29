@@ -9,11 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -54,5 +56,22 @@ public class AuthService {
         String refreshToken = jwtService.generateRefreshToken(userDetails.getUsername() , role);
 
         return new TokenResponse(activeToken, refreshToken);
+    }
+
+    public Map<String, String> getRefreshToken(String refreshToken) {
+        try {
+            String username = jwtService.extractUserName(refreshToken);
+            String role = jwtService.extractRole(refreshToken);
+
+            UserDetails userDetails = User.withUsername(username).password("").roles(role).build();
+
+            if(jwtService.validateToken(refreshToken, userDetails)){
+                String newAccessToken = jwtService.generateActiveToken(userDetails.getUsername(), role);
+                return Map.of("accessToken", newAccessToken);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        throw new RuntimeException("Error generate refresh token.");
     }
 }

@@ -1,6 +1,5 @@
 package com.athome.springTest.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,38 +9,31 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-
-    @Autowired
-    private JwtFilter jwtFilter;
+public class SecureConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("test 1");
-        http
+        return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login").permitAll()  // allow register & login
-                        .anyRequest().authenticated() // others require login
-                )
-                //.httpBasic(); // keep basic auth
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")    // Super admin only
+                        .requestMatchers("/api/sub-admin/**").hasAnyRole("SUPER_ADMIN", "SUB_ADMIN") // Sub + Super admin
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "SUB_ADMIN", "SUPER_ADMIN")
+                        .anyRequest().authenticated())
+                .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        System.out.println("test 2");
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        System.out.println("test 3");
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }

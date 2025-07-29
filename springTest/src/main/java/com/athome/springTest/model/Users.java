@@ -1,20 +1,23 @@
 package com.athome.springTest.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Users {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String username;
     private String password;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Users() {
     }
 
-    public Users(int id, String username, String password, String role) {
+    public Users(int id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -45,11 +48,14 @@ public class Users {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }
+
+
+

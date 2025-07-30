@@ -34,6 +34,7 @@ public class SuperAdminController {
         return ResponseEntity.ok(users);
     }
 
+
     @PutMapping("/change_user_role/{id}")
     public ResponseEntity<?> change_user_role(@PathVariable int id, @RequestBody RoleChangeRequest request){
         try {

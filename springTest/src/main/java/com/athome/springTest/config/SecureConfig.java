@@ -25,9 +25,9 @@ public class SecureConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/refresh-token").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("SUPER_ADMIN")    // Super admin only
-                        .requestMatchers("/api/sub-admin/**").hasAnyRole("SUPER_ADMIN", "SUB_ADMIN") // Sub + Super admin
-                        //.requestMatchers("/api/user/**").hasAnyRole("USER", "SUB_ADMIN", "SUPER_ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("SUPER_ADMIN")    // Super admin only
+                        .requestMatchers("/api/sub-admin/**").hasAnyAuthority("SUPER_ADMIN", "SUB_ADMIN") // Sub + Super admin
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "SUB_ADMIN", "SUPER_ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

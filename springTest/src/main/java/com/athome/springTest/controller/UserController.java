@@ -30,19 +30,4 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Update users name, password
-    // Super admin can update all users data by passing user id
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update_user(@PathVariable int id, @RequestBody Users user){
-        try {
-            Users res =  usersService.update(id, user);
-            return ResponseEntity.ok(res);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
 }

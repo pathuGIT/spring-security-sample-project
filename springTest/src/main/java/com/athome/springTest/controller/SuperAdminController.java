@@ -19,13 +19,7 @@ import java.util.List;
 public class SuperAdminController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UsersService usersService;
-
-
-
 
     @PutMapping("/change_user_role/{id}")
     public ResponseEntity<?> change_user_role(@PathVariable int id, @RequestBody RoleChangeRequest request){
@@ -37,6 +31,32 @@ public class SuperAdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred"); // 500
+        }
+    }
+
+    // Super admin can update all users name by passing user id
+    @PutMapping("/update_user/{id}")
+    public ResponseEntity<?> update_user(@PathVariable int id, @RequestBody Users user){
+        try {
+            System.out.println("her "+ id + user);
+            Users res =  usersService.update(id, user);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete_user/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id){
+        try {
+            String res =  usersService.delete(id);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

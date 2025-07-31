@@ -30,4 +30,13 @@ public class UsersService {
 
         return userRepository.save(user);
     }
+
+    public Users update(int id, Users user) {
+        Users userExist = userRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
+        userExist.setUsername(user.getUsername());
+        userExist.setPassword(user.getPassword());
+
+        return userRepository.save(userExist);
+    }
 }

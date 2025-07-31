@@ -42,4 +42,14 @@ public class CourseService {
         courseRepository.deleteById(course.getCo_id());
         return "successfully deleted course by id: " + course.getCo_id();
     }
+
+    public Course updateBy(int coId, Course course) {
+        Course courseExist = courseRepository.findById(coId).orElseThrow(
+                ()-> new IllegalArgumentException("Course not found with ID: " + coId));
+
+        courseExist.setName(course.getName());
+        courseExist.setType(course.getType());
+        courseExist.setCredit(course.getCredit());
+        return courseRepository.save(courseExist);
+    }
 }

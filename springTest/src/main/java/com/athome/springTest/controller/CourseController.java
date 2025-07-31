@@ -68,4 +68,18 @@ public class CourseController {
         }
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN')")
+    @PutMapping("/update/{co_id}")
+    public ResponseEntity<?> update(@PathVariable int co_id, @RequestBody Course course){
+        try {
+            Course res = courseService.updateBy(co_id, course);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
 }

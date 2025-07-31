@@ -24,15 +24,7 @@ public class SuperAdminController {
     @Autowired
     private UsersService usersService;
 
-    @GetMapping("/list_all_users")
-    public ResponseEntity<List<Users>> list_all_users(){
-        List<Users> users =  usersService.getAllUsers();
 
-        if(users.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-        return ResponseEntity.ok(users);
-    }
 
 
     @PutMapping("/change_user_role/{id}")

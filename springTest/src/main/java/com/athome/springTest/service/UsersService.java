@@ -4,6 +4,7 @@ import com.athome.springTest.model.Role;
 import com.athome.springTest.model.Users;
 import com.athome.springTest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class UsersService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public List<Users> getAllUsers() {
         return userRepository.findAll();
@@ -42,10 +45,18 @@ public class UsersService {
     }
 
     public String delete(int id) {
-        Users userExist = userRepository.findById(id)
+        userRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
 
         userRepository.deleteById(id);
         return "Successfully deleted user: " + id;
+    }
+
+    public Users updatePassword(int id, Users user) {
+        Users existUser = userRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
+
+        existUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(existUser);
     }
 }

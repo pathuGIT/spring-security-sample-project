@@ -59,4 +59,16 @@ public class SuperAdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @PutMapping("/update_user_password/{id}")
+    public ResponseEntity<?> updatePassword(@PathVariable int id, @RequestBody Users user){
+        try {
+            Users res =  usersService.updatePassword(id, user);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

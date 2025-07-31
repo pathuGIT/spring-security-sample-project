@@ -1,6 +1,7 @@
 package com.athome.springTest.controller;
 
 import com.athome.springTest.dto.RoleChangeRequest;
+import com.athome.springTest.dto.UserResponse;
 import com.athome.springTest.model.Role;
 import com.athome.springTest.model.Users;
 import com.athome.springTest.repository.UserRepository;
@@ -24,11 +25,10 @@ public class SuperAdminController {
     @PutMapping("/change_user_role/{id}")
     public ResponseEntity<?> change_user_role(@PathVariable int id, @RequestBody RoleChangeRequest request){
         try {
-            Users response = usersService.changeUserRole(id, request.getRole());
-
+            UserResponse response = usersService.changeUserRole(id, request.getRole());
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred"); // 500
         }
@@ -39,7 +39,7 @@ public class SuperAdminController {
     public ResponseEntity<?> update_user(@PathVariable int id, @RequestBody Users user){
         try {
             System.out.println("her "+ id + user);
-            Users res =  usersService.update(id, user);
+            UserResponse res =  usersService.update(id, user);
             return ResponseEntity.ok(res);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -63,8 +63,8 @@ public class SuperAdminController {
     @PutMapping("/update_user_password/{id}")
     public ResponseEntity<?> updatePassword(@PathVariable int id, @RequestBody Users user){
         try {
-            Users res =  usersService.updatePassword(id, user);
-            return ResponseEntity.ok(res);
+            String res =  usersService.updatePassword(id, user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception e) {

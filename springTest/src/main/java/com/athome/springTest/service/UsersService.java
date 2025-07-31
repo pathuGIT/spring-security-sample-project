@@ -1,5 +1,6 @@
 package com.athome.springTest.service;
 
+import com.athome.springTest.dto.UserResponse;
 import com.athome.springTest.model.Role;
 import com.athome.springTest.model.Users;
 import com.athome.springTest.repository.UserRepository;
@@ -21,7 +22,7 @@ public class UsersService {
         return userRepository.findAll();
     }
 
-    public Users changeUserRole(int id, Role role) {
+    public UserResponse changeUserRole(int id, Role role) {
         Users user = userRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
 
@@ -30,18 +31,19 @@ public class UsersService {
         }
 
         user.setRole(role);
-
-        return userRepository.save(user);
+        Users response = userRepository.save(user);
+        return new UserResponse(response.getId(), response.getUsername(), response.getRole());
     }
 
-    public Users update(int id, Users user) {
+    public UserResponse update(int id, Users user) {
         Users userExist = userRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
         if(userRepository.existsByUsername(user.getUsername()))
             throw new IllegalArgumentException("This user name already have.");
 
         userExist.setUsername(user.getUsername());
-        return userRepository.save(userExist);
+        Users users = userRepository.save(userExist);
+        return new UserResponse(users.getId(), users.getUsername(), users.getRole());
     }
 
     public String delete(int id) {
@@ -52,11 +54,12 @@ public class UsersService {
         return "Successfully deleted user: " + id;
     }
 
-    public Users updatePassword(int id, Users user) {
+    public String updatePassword(int id, Users user) {
         Users existUser = userRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("User not found with ID: " + id));
 
         existUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(existUser);
+        userRepository.save(existUser);
+        return "Password Updated.";
     }
 }

@@ -54,4 +54,18 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @DeleteMapping("/delete/{co_id}")
+    public ResponseEntity<?> delete(@PathVariable int co_id){
+        try {
+            String res = courseService.deleteBy(co_id);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }

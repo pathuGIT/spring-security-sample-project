@@ -41,4 +41,17 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN') or hasAuthority('USER')")
+    @GetMapping("/search_course_by")
+    public ResponseEntity<?> search_course_by(@RequestParam String keyword){
+        try {
+            List<Course> res = courseService.AllCourseByKeyword(keyword);
+            return ResponseEntity.ok(res);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

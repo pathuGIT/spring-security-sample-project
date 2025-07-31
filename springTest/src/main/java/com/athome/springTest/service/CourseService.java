@@ -26,4 +26,12 @@ public class CourseService {
         }
         return courseList;
     }
+
+    public List<Course> AllCourseByKeyword(String keyword) {
+        List<Course> courseList = courseRepository.findByKeyword(keyword);
+        if(courseList.isEmpty()){
+            throw new IllegalArgumentException("Not search result");
+        }
+        return courseList;
+    }
 }

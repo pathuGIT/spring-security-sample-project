@@ -13,17 +13,17 @@ public class Academic {
     @Enumerated(EnumType.STRING)
     private AcademicStatus academicStatus;
 
-    private Date startYear;
-    private Date endYear;
+    private Date startDate;
+    private Date endDate;
 
     public Academic() {
     }
 
-    public Academic(int id, AcademicStatus academicStatus, Date startYear, Date endYear) {
+    public Academic(int id, AcademicStatus academicStatus, Date startDate, Date endDate) {
         this.id = id;
         this.academicStatus = academicStatus;
-        this.startYear = startYear;
-        this.endYear = endYear;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
@@ -42,19 +42,19 @@ public class Academic {
         this.academicStatus = academicStatus;
     }
 
-    public Date getStartYear() {
-        return startYear;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStartYear(Date startYear) {
-        this.startYear = startYear;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getEndYear() {
-        return endYear;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndYear(Date endYear) {
-        this.endYear = endYear;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

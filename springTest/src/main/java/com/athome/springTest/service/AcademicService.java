@@ -12,7 +12,7 @@ public class AcademicService {
     private AcademicRepository academicRepository;
 
     public Academic createAcademic(Academic academic) {
-        if(academicRepository.existsByName(course.getName())){
+        if(academicRepository.existsByStartDate(academic.getStartDate())){
             throw new IllegalArgumentException("Course name already exists");
         }
         return academicRepository.save(academic);

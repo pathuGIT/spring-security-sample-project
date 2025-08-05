@@ -1,9 +1,10 @@
 package com.athome.springTest.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Course {
@@ -14,14 +15,19 @@ public class Course {
     private String type;
     private int credit;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Enrollments> enrollment = new HashSet<>();
+
     public Course() {
     }
 
-    public Course(int co_id, String name, String type, int credit) {
+    public Course(int co_id, String name, String type, int credit, Set<Enrollments> enrollment) {
         this.co_id = co_id;
         this.name = name;
         this.type = type;
         this.credit = credit;
+        this.enrollment = enrollment;
     }
 
     public int getCo_id() {
@@ -54,5 +60,13 @@ public class Course {
 
     public void setCredit(int credit) {
         this.credit = credit;
+    }
+
+    public Set<Enrollments> getEnrollment() {
+        return enrollment;
+    }
+
+    public void setEnrollment(Set<Enrollments> enrollment) {
+        this.enrollment = enrollment;
     }
 }

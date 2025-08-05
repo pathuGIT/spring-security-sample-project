@@ -1,6 +1,10 @@
 package com.athome.springTest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Users {
@@ -14,14 +18,19 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Enrollments> enrollment = new HashSet<>();
+
     public Users() {
     }
 
-    public Users(int id, String username, String password, Role role) {
+    public Users(int id, String username, String password, Role role, Set<Enrollments> enrollment) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.enrollment = enrollment;
     }
 
     public int getId() {
@@ -54,6 +63,14 @@ public class Users {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Set<Enrollments> getEnrollment() {
+        return enrollment;
+    }
+
+    public void setEnrollment(Set<Enrollments> enrollment) {
+        this.enrollment = enrollment;
     }
 }
 

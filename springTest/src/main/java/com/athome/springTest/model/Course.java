@@ -16,7 +16,6 @@ public class Course {
     private int credit;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    @JsonBackReference
     private Set<Enrollments> enrollment = new HashSet<>();
 
     public Course() {

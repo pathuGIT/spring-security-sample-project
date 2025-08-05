@@ -18,8 +18,8 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    @JsonBackReference
     private Set<Enrollments> enrollment = new HashSet<>();
 
     public Users() {

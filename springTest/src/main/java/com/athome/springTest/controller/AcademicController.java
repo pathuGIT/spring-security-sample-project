@@ -22,7 +22,7 @@ public class AcademicController {
     @PostMapping
     public ResponseEntity<?> createAcademic(@RequestBody Academic academic){
         try {
-            Course res = academicService.createAcademic(academic);
+            Academic res = academicService.createAcademic(academic);
             return ResponseEntity.ok(res);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

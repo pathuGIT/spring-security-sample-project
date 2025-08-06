@@ -1,6 +1,5 @@
 package com.athome.springTest.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,18 +10,20 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class AcademicCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String username;
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "acdemic_id")
+    private Academic academic;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL)
     private Set<Enrollments> enrollment = new HashSet<>();
 
     public int getId() {
@@ -33,28 +34,20 @@ public class Users {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
-    public String getPassword() {
-        return password;
+    public Academic getAcademic() {
+        return academic;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+    public void setAcademic(Academic academic) {
+        this.academic = academic;
     }
 
     public Set<Enrollments> getEnrollment() {
@@ -65,6 +58,3 @@ public class Users {
         this.enrollment = enrollment;
     }
 }
-
-
-

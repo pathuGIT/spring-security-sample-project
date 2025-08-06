@@ -28,4 +28,11 @@ public class AcademicService {
         return academicRepository.findAllByAcademicStatus(enumStatus);
     }
 
+    public Academic changeStatus(int id, Academic academic) {
+        Academic academic1 = academicRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Not pound this academic id: "+id));
+
+        academic1.setAcademicStatus(academic.getAcademicStatus());
+        return academicRepository.save(academic1);
+    }
 }

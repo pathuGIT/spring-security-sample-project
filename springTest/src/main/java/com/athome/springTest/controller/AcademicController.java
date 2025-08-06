@@ -33,8 +33,19 @@ public class AcademicController {
     @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN') or hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<?> view_academics(@RequestParam String status){
-        List<Academic> list =  academicService.getAcademics(status);
-        return ResponseEntity.ok(list);
+        try {
+            List<Academic> list =  academicService.getAcademics(status);
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PostMapping("/change_status")
+    public ResponseEntity<?> change_status(@RequestParam int id, @RequestBody Academic academic){
+        Academic res = academicService.changeStatus(id, academic);
+        return ResponseEntity.ok(res);
     }
 
 }

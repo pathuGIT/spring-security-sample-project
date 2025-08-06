@@ -1,10 +1,16 @@
 package com.athome.springTest.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Academic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,15 +22,8 @@ public class Academic {
     private Date startDate;
     private Date endDate;
 
-    public Academic() {
-    }
-
-    public Academic(int id, AcademicStatus academicStatus, Date startDate, Date endDate) {
-        this.id = id;
-        this.academicStatus = academicStatus;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    @OneToMany(mappedBy = "academic", cascade = CascadeType.ALL)
+    private Set<AcademicCourse> academicCourses = new HashSet<>();
 
     public int getId() {
         return id;
@@ -56,5 +55,13 @@ public class Academic {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Set<AcademicCourse> getAcademicCourses() {
+        return academicCourses;
+    }
+
+    public void setAcademicCourses(Set<AcademicCourse> academicCourses) {
+        this.academicCourses = academicCourses;
     }
 }

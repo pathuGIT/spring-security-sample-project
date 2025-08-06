@@ -2,11 +2,15 @@ package com.athome.springTest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,18 +20,7 @@ public class Course {
     private int credit;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private Set<Enrollments> enrollment = new HashSet<>();
-
-    public Course() {
-    }
-
-    public Course(int co_id, String name, String type, int credit, Set<Enrollments> enrollment) {
-        this.co_id = co_id;
-        this.name = name;
-        this.type = type;
-        this.credit = credit;
-        this.enrollment = enrollment;
-    }
+    private Set<AcademicCourse> academicCourses = new HashSet<>();
 
     public int getCo_id() {
         return co_id;
@@ -61,11 +54,11 @@ public class Course {
         this.credit = credit;
     }
 
-    public Set<Enrollments> getEnrollment() {
-        return enrollment;
+    public Set<AcademicCourse> getAcademicCourses() {
+        return academicCourses;
     }
 
-    public void setEnrollment(Set<Enrollments> enrollment) {
-        this.enrollment = enrollment;
+    public void setAcademicCourses(Set<AcademicCourse> academicCourses) {
+        this.academicCourses = academicCourses;
     }
 }

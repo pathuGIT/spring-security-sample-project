@@ -9,6 +9,8 @@ import com.athome.springTest.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AcademicCourseService {
     @Autowired
@@ -31,5 +33,9 @@ public class AcademicCourseService {
         ac.setCourse(course);
         ac.setAcademic(academic);
         return academicCourseRepository.save(ac);
+    }
+
+    public List<AcademicCourse> getAll() {
+        return academicCourseRepository.findAll();
     }
 }

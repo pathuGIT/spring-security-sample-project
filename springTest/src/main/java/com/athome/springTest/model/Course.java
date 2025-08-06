@@ -1,6 +1,7 @@
 package com.athome.springTest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Course {
     private int credit;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonManagedReference("course–academics")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
     public int getCo_id() {

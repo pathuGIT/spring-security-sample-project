@@ -22,6 +22,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN')")
     @GetMapping("/list_all_users")
     public ResponseEntity<List<Users>> list_all_users(){
+        System.out.println("ssssssssss");
         List<Users> users =  usersService.getAllUsers();
 
         if(users.isEmpty())

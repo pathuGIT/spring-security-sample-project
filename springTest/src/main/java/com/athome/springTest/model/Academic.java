@@ -1,5 +1,7 @@
 package com.athome.springTest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ public class Academic {
     private Date endDate;
 
     @OneToMany(mappedBy = "academic", cascade = CascadeType.ALL)
+    @JsonManagedReference("academic–courses")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
     public int getId() {

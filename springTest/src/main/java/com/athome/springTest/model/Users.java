@@ -1,6 +1,7 @@
 package com.athome.springTest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Users {
     private Role role;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @JsonManagedReference("user–enrollments")
     private Set<Enrollments> enrollment = new HashSet<>();
 
     public int getId() {

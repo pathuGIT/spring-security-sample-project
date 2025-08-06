@@ -1,5 +1,8 @@
 package com.athome.springTest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -17,13 +20,16 @@ public class AcademicCourse {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
+    @JsonBackReference("academic–courses")
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "acdemic_id")
+    @JsonBackReference("course–academics")
     private Academic academic;
 
     @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL)
+    @JsonManagedReference("ac-course–enrollments")
     private Set<Enrollments> enrollment = new HashSet<>();
 
     public int getId() {

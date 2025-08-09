@@ -5,6 +5,7 @@ import com.athome.springTest.model.AcademicCourse;
 import com.athome.springTest.service.AcademicCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class AcademicCourseController {
     @Autowired
     private AcademicCourseService academicCourseService;
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping
     public ResponseEntity<?> addAcademicCourse(@RequestParam int course_id, @RequestParam int academic_id){
         try {
@@ -25,6 +27,7 @@ public class AcademicCourseController {
         }
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN') or hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<?> getAllAcademicCourses(){
         List<AcademicCourseDTO> academicCourses = academicCourseService.getAll();

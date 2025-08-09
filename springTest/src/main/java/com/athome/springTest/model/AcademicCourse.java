@@ -23,16 +23,13 @@ public class AcademicCourse {
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonIgnore
-    //@JsonBackReference("course–academics")
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "academic_id")
     @JsonIgnore
-    //@JsonBackReference("academic–courses")
     private Academic academic;
 
     @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("ac-course–enrollments")
     private Set<Enrollments> enrollment = new HashSet<>();
 }

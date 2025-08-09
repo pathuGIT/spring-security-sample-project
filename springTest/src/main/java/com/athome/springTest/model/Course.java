@@ -24,46 +24,6 @@ public class Course {
     private int credit;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonManagedReference("course–academics")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
-    public int getCo_id() {
-        return co_id;
-    }
-
-    public void setCo_id(int co_id) {
-        this.co_id = co_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public int getCredit() {
-        return credit;
-    }
-
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
-    public Set<AcademicCourse> getAcademicCourses() {
-        return academicCourses;
-    }
-
-    public void setAcademicCourses(Set<AcademicCourse> academicCourses) {
-        this.academicCourses = academicCourses;
-    }
 }

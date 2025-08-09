@@ -29,7 +29,6 @@ public class Academic {
     private Date endDate;
 
     @OneToMany(mappedBy = "academic", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonManagedReference("academic–courses")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
 }

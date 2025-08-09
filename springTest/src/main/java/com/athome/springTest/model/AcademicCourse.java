@@ -1,6 +1,7 @@
 package com.athome.springTest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,25 +10,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Users {
+public class AcademicCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String username;
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    @JsonIgnore
+    private Course course;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "academic_id")
+    @JsonIgnore
+    private Academic academic;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Enrollments> enrollment = new HashSet<>();
 }
-
-
-

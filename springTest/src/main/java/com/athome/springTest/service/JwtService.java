@@ -1,58 +1,71 @@
 package com.athome.springTest.service;
 
-import com.athome.springTest.model.Users;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class JwtService {
+
+    @Value("${jwt.secret}")
+    private String secret;
+
     private final SecretKey secretKey;
 
-    public JwtService() {
-        String secret = "mPJr1hN9/kpU32l3zDnGqG0G0pX5KZs9zR3Bv6nLcc0=";
-        this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
+    public JwtService(@Value("${jwt.secret}") String secret) {
+        // Convert secret string to SecretKey
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Users user) {
-        System.out.println(user.getRole()+user.getUsername());
+
+    public String generateActiveToken(String username, String role) {
         return Jwts.builder()
-                .claim("ROLE", user.getRole())  // Add role claim
-                .subject(user.getUsername())
+                .claim("ROLE", role)
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 5)) // 5 minutes
-                .signWith(secretKey)
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 2))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-    // Refresh token (7 days)
-    public String generateRefreshToken(Users user) {
+    public String generateRefreshToken(String username, String role) {
         return Jwts.builder()
-                .claim("ROLE", user.getRole())  // Add role claim
-                .subject(user.getUsername())
+                .claim("ROLE", role)
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7)) // 7 days
-                .signWith(secretKey)
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 2))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUserName(token);
+        Date expiration = extractExpiration(token);
+        return username.equals(userDetails.getUsername()) && !expiration.before(new Date());
+    }
 
     public String extractUserName(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Token expired", e);
+        }
     }
 
     public Date extractExpiration(String token) {
@@ -71,13 +84,6 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .get("ROLE");
-    }
-
-
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUserName(token);
-        Date expiration = extractExpiration(token);
-        return username.equals(userDetails.getUsername()) && !expiration.before(new Date());
     }
 
 }

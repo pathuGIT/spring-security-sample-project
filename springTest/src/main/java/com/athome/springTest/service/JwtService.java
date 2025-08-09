@@ -49,6 +49,12 @@ public class JwtService {
                 .compact();
     }
 
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUserName(token);
+        Date expiration = extractExpiration(token);
+        return username.equals(userDetails.getUsername()) && !expiration.before(new Date());
+    }
+
     public String extractUserName(String token) {
         try {
             return Jwts.parser()
@@ -69,12 +75,6 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getExpiration();
-    }
-
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUserName(token);
-        Date expiration = extractExpiration(token);
-        return username.equals(userDetails.getUsername()) && !expiration.before(new Date());
     }
 
     public String extractRole(String token) {

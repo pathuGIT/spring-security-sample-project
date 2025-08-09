@@ -1,5 +1,6 @@
 package com.athome.springTest.controller;
 
+import com.athome.springTest.dto.AcademicCourseDTO;
 import com.athome.springTest.model.AcademicCourse;
 import com.athome.springTest.service.AcademicCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class AcademicCourseController {
 
     @GetMapping
     public ResponseEntity<?> getAllAcademicCourses(){
-        List<AcademicCourse> academicCourses = academicCourseService.getAll();
+        List<AcademicCourseDTO> academicCourses = academicCourseService.getAll();
         return ResponseEntity.ok(academicCourses);
     }
 }

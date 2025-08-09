@@ -1,5 +1,6 @@
 package com.athome.springTest.service;
 
+import com.athome.springTest.dto.AcademicCourseDTO;
 import com.athome.springTest.model.Academic;
 import com.athome.springTest.model.AcademicCourse;
 import com.athome.springTest.model.Course;
@@ -9,6 +10,7 @@ import com.athome.springTest.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,13 +31,21 @@ public class AcademicCourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(()-> new IllegalArgumentException("Not pound this course id: " + courseId));
 
-        AcademicCourse ac = new AcademicCourse();
-        ac.setCourse(course);
-        ac.setAcademic(academic);
+        AcademicCourse ac = AcademicCourse.builder()
+                .course(course)
+                .academic(academic)
+                .build();
         return academicCourseRepository.save(ac);
     }
 
-    public List<AcademicCourse> getAll() {
-        return academicCourseRepository.findAll();
+    public List<AcademicCourseDTO> getAll() {
+        List<AcademicCourse> list =  academicCourseRepository.findAll();
+
+        List<AcademicCourseDTO> academicCourseDTOS = new ArrayList<>();
+
+        for(AcademicCourse ac : list)
+            academicCourseDTOS.add(new AcademicCourseDTO(ac));
+
+        return academicCourseDTOS;
     }
 }

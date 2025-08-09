@@ -1,18 +1,22 @@
 package com.athome.springTest.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Academic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,47 +28,8 @@ public class Academic {
     private Date startDate;
     private Date endDate;
 
-    @OneToMany(mappedBy = "academic", cascade = CascadeType.ALL)
-    @JsonManagedReference("academic–courses")
+    @OneToMany(mappedBy = "academic", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonManagedReference("academic–courses")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public AcademicStatus getAcademicStatus() {
-        return academicStatus;
-    }
-
-    public void setAcademicStatus(AcademicStatus academicStatus) {
-        this.academicStatus = academicStatus;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Set<AcademicCourse> getAcademicCourses() {
-        return academicCourses;
-    }
-
-    public void setAcademicCourses(Set<AcademicCourse> academicCourses) {
-        this.academicCourses = academicCourses;
-    }
 }

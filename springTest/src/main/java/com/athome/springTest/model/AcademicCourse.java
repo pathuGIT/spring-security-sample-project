@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AcademicCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,47 +22,17 @@ public class AcademicCourse {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonBackReference("academic–courses")
+    @JsonIgnore
+    //@JsonBackReference("course–academics")
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "acdemic_id")
-    @JsonBackReference("course–academics")
+    @JoinColumn(name = "academic_id")
+    @JsonIgnore
+    //@JsonBackReference("academic–courses")
     private Academic academic;
 
-    @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "academicCourse", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("ac-course–enrollments")
     private Set<Enrollments> enrollment = new HashSet<>();
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public Academic getAcademic() {
-        return academic;
-    }
-
-    public void setAcademic(Academic academic) {
-        this.academic = academic;
-    }
-
-    public Set<Enrollments> getEnrollment() {
-        return enrollment;
-    }
-
-    public void setEnrollment(Set<Enrollments> enrollment) {
-        this.enrollment = enrollment;
-    }
 }

@@ -1,17 +1,20 @@
 package com.athome.springTest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +23,8 @@ public class Course {
     private String type;
     private int credit;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    @JsonManagedReference("course–academics")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonManagedReference("course–academics")
     private Set<AcademicCourse> academicCourses = new HashSet<>();
 
     public int getCo_id() {

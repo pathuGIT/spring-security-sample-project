@@ -16,10 +16,10 @@ public class EnrollController {
     @Autowired
     private EnrollService enrollService;
 
-    @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/register")
-    public Enrollments enroll(@RequestParam int academicCourse_id, @RequestParam int user_id){
-        return enrollService.enroll(academicCourse_id, user_id);
+    @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('SUB_ADMIN') or hasAuthority('USER')")
+    @PostMapping
+    public Enrollments enroll(@RequestParam int academicCourse_id){
+        return enrollService.enroll(academicCourse_id);
     }
 
 
